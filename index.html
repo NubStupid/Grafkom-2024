@@ -1,11 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get Click Position</title>
+<style>
+    #clickable-area {
+        width: 512px;
+        height: 512px;
+        background-color: lightgray;
+    }
+</style>
 </head>
 <body>
-    <h1>Hello World!</h1>
+
+<div id="clickable-area">
+</div>
+
+
+<script>
+var firstClickX, firstClickY, secondClickX, secondClickY;
+var clickCount = 0;
+
+document.getElementById('clickable-area').addEventListener('click', function(event) {
+    if (clickCount === 0) {
+        firstClickX = event.clientX;
+        firstClickY = event.clientY;
+        console.log('First Click: ' + firstClickX + ', ' + firstClickY);
+        clickCount++;
+    } else if (clickCount === 1) {
+        secondClickX = event.clientX;
+        secondClickY = event.clientY;
+        console.log('Second Click: ' + secondClickX + ', ' + secondClickY);
+        
+        // DDA Algorithm to draw line
+        var dx = secondClickX - firstClickX;
+        var dy = secondClickY - firstClickY;
+        var steps = Math.max(Math.abs(dx), Math.abs(dy));
+        var xIncrement = dx / steps;
+        var yIncrement = dy / steps;
+        
+        var x = firstClickX;
+        var y = firstClickY;
+        
+        for (var i = 0; i <= steps; i++) {
+            plot(x, y);
+            x += xIncrement;
+            y += yIncrement;
+        }
+        
+        clickCount = 0;
+    }
+});
+
+function plot(x, y) {
+    var point = document.createElement('div');
+    point.style.width = '2px';
+    point.style.height = '2px';
+    point.style.backgroundColor = 'black';
+    point.style.position = 'absolute';
+    point.style.left = x + 'px';
+    point.style.top = y + 'px';
+    document.getElementById('clickable-area').appendChild(point);
+}
+</script>
+
 </body>
 </html>
